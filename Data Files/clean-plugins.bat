@@ -1,7 +1,10 @@
 @echo off
+set logfile=tes3cmdclean\cleaning.log
 echo Cleaning plugins from Morrowind-2019 guide...
-echo Cleaning process started %date% ~ %time% > cleaning.log
+echo Cleaning process started %date% ~ %time% > %logfile%
 echo.
+
+if not exist tes3cmdclean mkdir tes3cmdclean
 
 call :clean "wl_SolstheimOverhaul_v1.esm"
 call :clean "correctUV Ore Replacer 1.0.esp"
@@ -31,10 +34,9 @@ pause
 
 :clean
 if Exist "%~1" (
-	tes3cmd clean "%~1" >> cleaning.log
+	tes3cmd clean "%~1" >> %logfile%
 	if Exist "Clean_%~1" (
-		move "%~1" "tes3cmddirty\%~1" > NUL
-		ren "Clean_%~1" "%~1"
+		move "Clean_%~1" "tes3cmdclean\%~1" > NUL
 	) else echo Skipping %~1 ^(already clean^)
 ) else echo Skipping %~1 ^(unable to find file^)
 exit /b
