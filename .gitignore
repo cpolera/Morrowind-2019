@@ -1,0 +1,4 @@
+# Ignore all Morrowind game files except PROJECT files
+*
+!.gitignore
+!Morrowind_2019.md
