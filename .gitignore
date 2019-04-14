@@ -2,5 +2,6 @@
 *
 !.gitignore
 !Morrowind_2019.md
-!MTE-Update.bat
+!MTE-Updater.bat
+!MTE-Updater.jar
 !mte-version.txt
