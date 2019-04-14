@@ -19,9 +19,23 @@ import org.apache.commons.io.IOUtils;
 
 
 public class MTEUpdater {
-	private static String repo = "https://github.com/Tyler799/Morrowind-2019/archive/master.zip";
+
+	private static String repo = "https://github.com/Tyler799/Morrowind-2019/";
 	private static String versionURL = "https://raw.githubusercontent.com/Tyler799/Morrowind-2019/updater/mte-version.txt";
-	private static String localVersionTxt = "src/main/java/Morrowind/VersionDoc/mte-version.txt";
+	private static String docTarget = "src/main/java/Morrowind/VersionDoc/";
+	private static String localVersionTxt = docTarget + "mte-version.txt";
+	private static String remoteVersion = docTarget + "mte-version.tmp";
+	private static String repoArchive = repo + "archive/master.zip";
+	private static String repoCompare = repo + "compare/";
+
+	private static void downloadVersionDoc(){
+		try {
+			downloadUsingStream(versionURL, remoteVersion);
+		} catch (IOException e) {
+			System.out.println("ERROR: Unable to download guide version file!");
+			e.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) {
 
@@ -29,19 +43,14 @@ public class MTEUpdater {
 		File versionTxt = new File(localVersionTxt);
 		if (!versionTxt.exists()) {
 			System.out.println("ERROR: Unable to find mte version file!");
-			return;//TODO if not found, create dummy file and skip to asking if they would like to see most recent changes
+			return;//TODO if not found, create dummy file
 		}
 		
 		System.out.println("Downloading mte version file...");
 
-		 try {        
-			 downloadUsingStream(versionURL, "mte-version.tmp");
-		 } catch (IOException e) {
-			 System.out.println("ERROR: Unable to download guide version file!");
-			 e.printStackTrace();
-		 }
+		 downloadVersionDoc();
 		 
-		 File versionTmp = new File("mte-version.tmp");
+		 File versionTmp = new File(remoteVersion);
 		 
 		 System.out.println("Comparing version numbers...");
 		 
@@ -62,7 +71,7 @@ public class MTEUpdater {
 			 	if (input.equals("yes") || input.equals("y")) {
 			 		
 			 		// Construct the URL in string format
-			 		String urlString = "https://github.com/Tyler799/Morrowind-2019/compare/" + lastVersion + ".." + curVersion;
+			 		String urlString = repoCompare + lastVersion + ".." + curVersion;
 			 		
 			 		// Wrap the string with an URI 
 			 		URI compareURL = null;
@@ -82,7 +91,7 @@ public class MTEUpdater {
 			 		
 			 		// Download repository files
 			 		try {
-						downloadUsingStream(repo, "Morrowind-2019.zip");
+						downloadUsingStream(repoArchive, "Morrowind-2019.zip");
 					} catch (IOException e1) {
 						System.out.println("ERROR: Unable to download repo files!");
 						e1.printStackTrace();
