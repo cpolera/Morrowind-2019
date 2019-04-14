@@ -95,10 +95,9 @@ public class MTEUpdater {
 					} catch (IOException e1) {
 						System.out.println("ERROR: Unable to download repo files!");
 						e1.printStackTrace();
-					}
-			 		
-			 		
-			 		
+					}//TODO Looks like this output is at the project level, dont think users can access it well from there
+					//if at all. Might be what unzip method is for below
+
 			 		System.out.println("Updating mte version file...");
 			 		PrintWriter writer = null;
 					try {
