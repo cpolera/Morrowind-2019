@@ -1,3 +1,5 @@
+package Morrowind;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -17,21 +19,23 @@ import org.apache.commons.io.IOUtils;
 
 
 public class MTEUpdater {
+	private static String repo = "https://github.com/Tyler799/Morrowind-2019/archive/master.zip";
+	private static String versionURL = "https://raw.githubusercontent.com/Tyler799/Morrowind-2019/updater/mte-version.txt";
+	private static String localVersionTxt = "src/main/java/Morrowind/VersionDoc/mte-version.txt";
 
 	public static void main(String[] args) {
 
 		// Before we do anything else check if the version file exists
-		File versionTxt = new File("mte-version.txt");
+		File versionTxt = new File(localVersionTxt);
 		if (!versionTxt.exists()) {
 			System.out.println("ERROR: Unable to find mte version file!");
-			return;
+			return;//TODO if not found, create dummy file and skip to asking if they would like to see most recent changes
 		}
 		
 		System.out.println("Downloading mte version file...");
-		String url = "https://raw.githubusercontent.com/Tyler799/Morrowind-2019/updater/mte-version.txt";
-		        
+
 		 try {        
-			 downloadUsingStream(url, "mte-version.tmp");
+			 downloadUsingStream(versionURL, "mte-version.tmp");
 		 } catch (IOException e) {
 			 System.out.println("ERROR: Unable to download guide version file!");
 			 e.printStackTrace();
@@ -41,19 +45,20 @@ public class MTEUpdater {
 		 
 		 System.out.println("Comparing version numbers...");
 		 
-		 String curVersion = readFile(versionTmp.getName());
-		 String lastVersion = readFile(versionTxt.getName());
+		 String curVersion = readFile(versionTmp.getAbsolutePath());
+		 String lastVersion = readFile(versionTxt.getAbsolutePath());
 		 
 		 if (!curVersion.equals(lastVersion)) {
 		 	System.out.println("Your version of the guide is out of date");
 		 	
 		 	Scanner reader = new Scanner(System.in);
-		 	System.out.println("Would you like to see a list of recent updates?");
+		 	System.out.println("Would you like to see a list of recent updates? (y/n)");
 		 	
 		 	// Continue asking for input until the user says yes or no
 			boolean inputFlag = false;
-		 	while (inputFlag == false) {
+		 	while (!inputFlag) {
 		 		String input = reader.next();
+
 			 	if (input.equals("yes") || input.equals("y")) {
 			 		
 			 		// Construct the URL in string format
@@ -76,9 +81,8 @@ public class MTEUpdater {
 					}
 			 		
 			 		// Download repository files
-			 		url = "https://github.com/Tyler799/Morrowind-2019/archive/master.zip";
 			 		try {
-						downloadUsingStream(url, "Morrowind-2019.zip");
+						downloadUsingStream(repo, "Morrowind-2019.zip");
 					} catch (IOException e1) {
 						System.out.println("ERROR: Unable to download repo files!");
 						e1.printStackTrace();
@@ -116,7 +120,7 @@ public class MTEUpdater {
 			 e.printStackTrace();
 		 }
 	}
-	
+
 	/** Here we are using URL openStream method to create the input stream. 
 	 * Then we are using a file output stream to read data from the input stream and write to the file.
 	 * @param urlStr 

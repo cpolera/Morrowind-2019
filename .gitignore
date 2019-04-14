@@ -1,8 +1,5 @@
-# Ignore everything except the projet files
-*
-!.gitignore
-!Morrowind_2019.md
-!MTE-Updater.bat
-!MTE-Updater.jar
-!mte-version.txt
-!/updater/MTEUpdater/src/
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
